@@ -194,21 +194,15 @@ public function options_page()
 
 public function admin_enqueue_scripts()
 {
-    wp_enqueue_style(
-        'gmo-ads-master-style',
-        plugins_url('css/gmo-ads-master.min.css', __FILE__),
-        array(),
-        $this->version,
-        'all'
-    );
-
-    wp_enqueue_script(
-        'gmo-ads-master-script',
-        plugins_url('js/gmo-ads-master.min.js', __FILE__),
-        array('jquery'),
-        $this->version,
-        true
-    );
+    if (isset($_GET['page']) && $_GET['page'] === 'gmoadsmaster') {
+        wp_enqueue_style(
+            'gmo-ads-master-style',
+            plugins_url('css/gmo-ads-master.min.css', __FILE__),
+            array(),
+            $this->version,
+            'all'
+        );
+    }
 }
 
 private function get_num_ads()
