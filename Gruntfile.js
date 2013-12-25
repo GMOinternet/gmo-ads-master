@@ -60,6 +60,9 @@ module.exports = function( grunt ) {
     
     sass:   {
       all: {
+      options: {                       // Target options
+        style: 'compressed'
+      },
         files: {
           'css/gmo-ads-master.css': 'css/gmo-ads-master.scss'
         }

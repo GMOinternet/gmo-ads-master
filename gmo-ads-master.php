@@ -30,7 +30,6 @@
  */
 
 
-
 define('GMOADSMASTER_URL',  plugins_url('', __FILE__));
 define('GMOADSMASTER_PATH', dirname(__FILE__));
 
@@ -41,6 +40,7 @@ class GMOAdsMaster {
 
 private $version = '';
 private $langs   = '';
+private $num_ads = 3;
 
 function __construct()
 {
@@ -55,7 +55,6 @@ function __construct()
 public function register()
 {
     add_action('plugins_loaded', array($this, 'plugins_loaded'));
-    add_action('wp_enqueue_scripts', array($this, 'wp_enqueue_scripts'));
 
     register_sidebar(array(
         'name'          => __('Before Contents', 'gmoadsmaster'),
@@ -80,6 +79,16 @@ public function register()
     ));
 }
 
+public function admin_init()
+{
+    if (isset($_POST['gmoadsmaster']) && $_POST['gmoadsmaster']){
+        if (check_admin_referer('gmoadsmaster', 'gmoadsmaster')){
+            $this->save();
+            wp_redirect('options-general.php?page=gmoadsmaster');
+        }
+    }
+}
+
 public function plugins_loaded()
 {
     load_plugin_textdomain(
@@ -89,6 +98,33 @@ public function plugins_loaded()
     );
 
     add_action('admin_menu', array($this, 'admin_menu'));
+    add_action('admin_enqueue_scripts', array($this, 'admin_enqueue_scripts'));
+    add_action('admin_init', array($this, 'admin_init'));
+    add_action('wp_head', array($this, 'wp_head'));
+    add_action('widgets_init', array($this, 'widgets_init'));
+}
+
+public function widgets_init()
+{
+    require_once(dirname(__FILE__).'/includes/gmo_ad_widget.php');
+    register_widget('GMO_Ad_Widget');
+}
+
+public function wp_head()
+{
+    if ($this->get_option('gmoadsmaster_verification')) {
+        printf(
+            '<meta name="%s" content="%s" />'."\n",
+            'google-site-verification',
+            esc_attr($this->get_option('gmoadsmaster_verification'))
+        );
+    }
+
+    if (!is_user_logged_in()) {
+        if ($this->get_option('gmoadsmaster_analytics')) {
+            echo $this->get_option('gmoadsmaster_analytics')."\n";
+        }
+    }
 }
 
 public function admin_menu()
@@ -105,7 +141,10 @@ public function admin_menu()
 public function options_page()
 {
 ?>
-<div class="wrap">
+<div id="gmoadsmaster" class="wrap">
+<form method="post" action="">
+<?php wp_nonce_field('gmoadsmaster', 'gmoadsmaster'); ?>
+
 <h2>GMO Ads Master</h2>
 
 <h3>Stats Settings</h3>
@@ -114,20 +153,46 @@ public function options_page()
 <tbody>
     <tr>
         <th><?php _e('Verification', 'gmoadsmaster'); ?></th>
-        <td><input type="text" id="verification" name="verification" value="<?php echo get_option('gmoadsmaster_verification'); ?>" style="width:100%;"><br /><?php _e('Enter your meta key "content" value to verify your blog with <a href="https://www.google.com/webmasters/tools/home?hl=ja">Google Webmaster Tools</a>.', 'gmoadsmaster'); ?></td>
+        <td><input type="text" name="gmoadsmaster_verification" value="<?php echo esc_attr($this->get_option('gmoadsmaster_verification')); ?>" style="width:100%;"><br /><?php _e('Enter your meta key "content" value to verify your blog with <a href="https://www.google.com/webmasters/tools/home?hl=ja">Google Webmaster Tools</a>.', 'gmoadsmaster'); ?></td>
     </tr>
     <tr>
         <th><?php _e('Google Analytics Code', 'gmoadsmaster'); ?></th>
-        <td><textarea style="width:100%;height:10em;"></textarea></td>
+        <td><textarea name="gmoadsmaster_analytics" style="width:100%;height:10em;"><?php echo esc_textarea($this->get_option('gmoadsmaster_analytics')); ?></textarea></td>
     </tr>
 </tbody>
 </table>
 
-</div>
-<?
+<h3>Advertising Codes</h3>
+
+<div class="gmoadsmaster-adcodes">
+<?php
+    $ads = $this->get_option('gmoadsmaster_adcodes');
+?>
+<?php for ($i = 0; $i < $this->get_num_ads(); $i++): ?>
+    <div class="gmoadsmaster-adcode" style="width: <?php echo floor(100/$this->get_num_ads()); ?>%">
+        <div class="gmoadsmaster-adcode-wrap">
+            <div class="gmoadsmaster-adcode-title">
+                <h4><?php _e('Advertising Code', 'gmoadsmaster'); ?> (<?php echo $i + 1; ?>)</h4>
+            </div>
+            <div class="gmoadsmaster-adcode-code">
+                <h5><?php _e('Advertising Name', 'gmoadsmaster'); ?></h5>
+                <input type="text" name="gmoadsmaster_adcodes[<?php echo $i; ?>][name]" value="<?php echo @esc_attr($ads[$i]['name']); ?>">
+                <h5><?php _e('Advertising Code', 'gmoadsmaster'); ?></h5>
+                <textarea name="gmoadsmaster_adcodes[<?php echo $i; ?>][html]"><?php echo @esc_textarea($ads[$i]['html']); ?></textarea>
+            </div>
+        </div>
+    </div>
+<?php endfor; ?>
+</div><!-- #gmoadsmaster_adcodes -->
+
+<p><input type="submit" name="submit" id="submit" class="button button-primary" value="<?php _e("Save Changes", "gmoadsmaster"); ?>"></p>
+
+</form>
+</div><!-- #gmoadsmaster -->
+<?php
 }
 
-Public function wp_enqueue_scripts()
+public function admin_enqueue_scripts()
 {
     wp_enqueue_style(
         'gmo-ads-master-style',
@@ -144,6 +209,41 @@ Public function wp_enqueue_scripts()
         $this->version,
         true
     );
+}
+
+private function get_num_ads()
+{
+    return apply_filters(
+        'gmoadsmaster_num_ads',
+        $this->num_ads
+    );
+}
+
+private function save()
+{
+    update_option('gmoadsmaster_verification', $_POST['gmoadsmaster_verification']);
+    update_option('gmoadsmaster_analytics', $_POST['gmoadsmaster_analytics']);
+    update_option('gmoadsmaster_adcodes', $_POST['gmoadsmaster_adcodes']);
+}
+
+public function get_option($option)
+{
+    if (is_array(get_option($option))) {
+        return array_map(array($this, 'filters'), get_option($option));
+    } else {
+        return $this->filters(get_option($option));
+    }
+}
+
+private function filters($value)
+{
+    if (is_array($value)) {
+        return array_map(array($this, 'filters'), $value);
+    } else {
+        $value = stripslashes($value);
+        $value = trim($value);
+        return $value;
+    }
 }
 
 } // end TestPlugin
