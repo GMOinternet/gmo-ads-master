@@ -7,9 +7,9 @@ module.exports = function( grunt ) {
     pkg:    grunt.file.readJSON( 'package.json' ),
     sass:   {
       all: {
-      options: {                       // Target options
-        style: 'expanded'
-      },
+        options: {                       // Target options
+          style: 'expanded'
+        },
         files: {
           'css/gmo-ads-master.css': 'css/gmo-ads-master.scss'
         }

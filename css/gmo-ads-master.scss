@@ -4,6 +4,7 @@
 {
   $wpadmin-border-color: #e5e5e5;
   $wpadmin-background-color: #fafafa;
+  $wpadmin-break-point: 782px;
 
   .gmoadsmaster-adcodes
   {
@@ -15,7 +16,7 @@
     {
       float: left;
 
-      @media screen and (max-width: 782px)
+      @media screen and (max-width: $wpadmin-break-point)
       {
         float: none !important;
         width: 100% !important;

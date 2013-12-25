@@ -33,10 +33,10 @@
 define('GMOADSMASTER_URL',  plugins_url('', __FILE__));
 define('GMOADSMASTER_PATH', dirname(__FILE__));
 
-$gmoadsmaster = new GMOAdsMaster();
+$gmoadsmaster = new GMO_Ads_Master();
 $gmoadsmaster->register();
 
-class GMOAdsMaster {
+class GMO_Ads_Master {
 
 private $version = '';
 private $langs   = '';
