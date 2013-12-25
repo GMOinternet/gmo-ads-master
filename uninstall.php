@@ -7,7 +7,9 @@ if (!defined('WP_UNINSTALL_PLUGIN')) {
 
 
 $gmoadsmaster_options = array(
-    'gmoadsmaster-adcodes',
+    'gmoadsmaster_verification',
+    'gmoadsmaster_analytics',
+    'gmoadsmaster_adcodes',
 );
 
 foreach ($gmoadsmaster_options as $op) {
