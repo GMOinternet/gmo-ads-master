@@ -142,7 +142,7 @@ public function options_page()
 {
 ?>
 <div id="gmoadsmaster" class="wrap">
-<form method="post" action="">
+<form method="post" action="<?php esc_attr($_SERVER['REQUEST_URI']); ?>">
 <?php wp_nonce_field('gmoadsmaster', 'gmoadsmaster'); ?>
 
 <h2>GMO Ads Master</h2>
