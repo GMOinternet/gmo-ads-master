@@ -30,7 +30,7 @@ function __construct()
 
 public function form($par)
 {
-    $ad = (isset($par['ad']) && $par['ad']) ? $par['ad'] : '';
+    $selected_ad = (isset($par['ad']) && $par['ad']) ? $par['ad'] : '';
     $id = $this->get_field_id('ad');
     $name = $this->get_field_name('ad');
 
@@ -42,8 +42,8 @@ public function form($par)
         esc_attr($name)
     );
 
-    echo '<option value="">Please select advertisement.</option>';
 
+    echo '<option value="">Please select advertisement.</option>';
     foreach ($this->ads as $key => $ad) {
         if (isset($ad['html']) && $ad['html']) {
             if (isset($ad['name']) && $ad['name']) {
@@ -52,7 +52,7 @@ public function form($par)
                 $n = $key + 1;
                 $name = __("Advertisement", "gmoadsmaster"). " ({$n})";
             }
-            if (intval($ad) === intval($key)) {
+            if (intval($selected_ad) === intval($key)) {
                 $selected = 'selected';
             } else {
                 $selected = '';

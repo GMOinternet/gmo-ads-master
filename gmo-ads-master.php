@@ -102,6 +102,40 @@ public function plugins_loaded()
     add_action('admin_init', array($this, 'admin_init'));
     add_action('wp_head', array($this, 'wp_head'));
     add_action('widgets_init', array($this, 'widgets_init'));
+
+    add_filter('the_content', array($this, 'the_content'), 1, 1);
+}
+
+public function the_content($contents)
+{
+    if (!is_singular()) {
+        return $contents; // exclude when not singular
+    }
+
+    $html = '';
+
+    $html .= '<aside id="gmoadsmaster-before-content" class="gmoadsmaster"><ul>';
+    $html .= $this->get_sidebar('before-contents');
+    $html .= '</ul></aside>';
+
+    $html .= $contents . "\n";
+
+    $html .= '<aside id="gmoadsmaster-after-content" class="gmoadsmaster"><ul>';
+    $html .= $this->get_sidebar('after-contents');
+    $html .= '</ul></aside>';
+
+
+    return $html;
+}
+
+public function get_sidebar($index)
+{
+    ob_start();
+    dynamic_sidebar($index);
+    $sidebar_contents = ob_get_contents();
+    ob_end_clean();
+
+    return $sidebar_contents;
 }
 
 public function widgets_init()
