@@ -166,9 +166,15 @@ public function options_page()
 
 <div class="gmoadsmaster-adcodes">
 <?php
-    $ads = $this->get_option('gmoadsmaster_adcodes');
+    $ads = $this->get_option('gmoadsmaster_adcodes', array());
 ?>
 <?php for ($i = 0; $i < $this->get_num_ads(); $i++): ?>
+    <?php
+        if (!isset($ads[$i])) {
+            $ads[$i]['name'] = '';
+            $ads[$i]['html'] = '';
+        }
+    ?>
     <div class="gmoadsmaster-adcode" style="width: <?php echo floor(100/$this->get_num_ads()); ?>%">
         <div class="gmoadsmaster-adcode-wrap">
             <div class="gmoadsmaster-adcode-title">
@@ -176,9 +182,9 @@ public function options_page()
             </div>
             <div class="gmoadsmaster-adcode-code">
                 <h5><?php _e('Advertising Name', 'gmoadsmaster'); ?></h5>
-                <input type="text" name="gmoadsmaster_adcodes[<?php echo $i; ?>][name]" value="<?php echo @esc_attr($ads[$i]['name']); ?>">
+                <input type="text" name="gmoadsmaster_adcodes[<?php echo $i; ?>][name]" value="<?php echo esc_attr($ads[$i]['name']); ?>">
                 <h5><?php _e('Advertising Code', 'gmoadsmaster'); ?></h5>
-                <textarea name="gmoadsmaster_adcodes[<?php echo $i; ?>][html]"><?php echo @esc_textarea($ads[$i]['html']); ?></textarea>
+                <textarea name="gmoadsmaster_adcodes[<?php echo $i; ?>][html]"><?php echo esc_textarea($ads[$i]['html']); ?></textarea>
             </div>
         </div>
     </div>
@@ -220,12 +226,12 @@ private function save()
     update_option('gmoadsmaster_adcodes', $_POST['gmoadsmaster_adcodes']);
 }
 
-public function get_option($option)
+public function get_option($option, $default = null)
 {
     if (is_array(get_option($option))) {
-        return array_map(array($this, 'filters'), get_option($option));
+        return array_map(array($this, 'filters'), get_option($option, $default));
     } else {
-        return $this->filters(get_option($option));
+        return $this->filters(get_option($option, $default));
     }
 }
 
