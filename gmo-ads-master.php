@@ -103,7 +103,7 @@ public function plugins_loaded()
     add_action('wp_head', array($this, 'wp_head'));
     add_action('widgets_init', array($this, 'widgets_init'));
 
-    add_filter('the_content', array($this, 'the_content'), 1, 1);
+    add_filter('the_content', array($this, 'the_content'));
 }
 
 public function the_content($contents)
