@@ -11,6 +11,7 @@ module.exports = function( grunt ) {
           style: 'expanded'
         },
         files: {
+          'css/admin-gmo-ads-master.css': 'css/admin-gmo-ads-master.scss',
           'css/gmo-ads-master.css': 'css/gmo-ads-master.scss'
         }
       }
@@ -30,7 +31,10 @@ module.exports = function( grunt ) {
       minify: {
         expand: true,
         cwd: 'css/',
-        src: ['gmo-ads-master.css'],
+        src: [
+          'admin-gmo-ads-master.css',
+          'gmo-ads-master.css'
+        ],
         dest: 'css/',
         ext: '.min.css'
       }

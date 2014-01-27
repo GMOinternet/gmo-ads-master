@@ -102,8 +102,20 @@ public function plugins_loaded()
     add_action('admin_init', array($this, 'admin_init'));
     add_action('wp_head', array($this, 'wp_head'));
     add_action('widgets_init', array($this, 'widgets_init'));
+    add_action('wp_enqueue_scripts', array($this, 'wp_enqueue_scripts'));
 
     add_filter('the_content', array($this, 'the_content'));
+}
+
+public function wp_enqueue_scripts()
+{
+    wp_enqueue_style(
+        'gmo-ads-master-style',
+        plugins_url('css/gmo-ads-master.min.css', __FILE__),
+        array(),
+        $this->version,
+        'all'
+    );
 }
 
 public function the_content($contents)
@@ -236,8 +248,8 @@ public function admin_enqueue_scripts()
 {
     if (isset($_GET['page']) && $_GET['page'] === 'gmoadsmaster') {
         wp_enqueue_style(
-            'gmo-ads-master-style',
-            plugins_url('css/gmo-ads-master.min.css', __FILE__),
+            'admin-gmo-ads-master-style',
+            plugins_url('css/admin-gmo-ads-master.min.css', __FILE__),
             array(),
             $this->version,
             'all'
