@@ -31,8 +31,11 @@ function __construct()
 public function form($par)
 {
     $selected_ad = (isset($par['ad']) && $par['ad']) ? $par['ad'] : '';
+    $selected_style = (isset($par['style']) && $par['style']) ? $par['style'] : '';
     $id = $this->get_field_id('ad');
+    $style_id = $this->get_field_id('style');
     $name = $this->get_field_name('ad');
+    $style_name = $this->get_field_name('style');
 
     echo '<p>';
 
@@ -41,7 +44,6 @@ public function form($par)
         esc_attr($id),
         esc_attr($name)
     );
-
 
     echo '<option value="">Please select advertisement.</option>';
     foreach ($this->ads as $key => $ad) {
@@ -68,6 +70,31 @@ public function form($par)
 
     echo "</select>";
     echo '</p>';
+
+    echo '<p>';
+
+    printf(
+        '<select id="%s" name="%s">',
+        esc_attr($style_id),
+        esc_attr($style_name)
+    );
+
+    foreach ($this->get_styles() as $key => $style) {
+        if ($selected_style === $key) {
+            $selected = 'selected';
+        } else {
+            $selected = '';
+        }
+        printf(
+            '<option value="%s" %s>%s</option>',
+            esc_attr($key),
+            $selected,
+            esc_html($key)
+        );
+    }
+
+    echo "</select>";
+    echo '</p>';
 }
 
 public function update($new_instance, $old_instance)
@@ -79,10 +106,35 @@ public function widget($args, $par)
 {
     echo $args['before_widget'];
     $ad = $this->ads[$par['ad']]['html'];
-    echo '<div class="gmoadsmaster-ad-wrap">';
+    printf(
+        '<div class="gmoadsmaster-ad-wrap" style="%s">',
+        $this->get_styles($par['style'])
+    );
     echo $ad;
     echo '</div>';
     echo $args['after_widget'];
+}
+
+private function get_styles($style = null)
+{
+    $styles = apply_filters(
+        'gmoadsmaster_styles',
+        array(
+            'left'   => 'text-align: left;',
+            'center' => 'text-align: center;',
+            'right'  => 'text-align: right;',
+        )
+    );
+
+    if ($style) {
+        if (isset($styles[$style])) {
+            return $styles[$style];
+        } else {
+            return 'text-align: left;';
+        }
+    } else {
+       return $styles;
+    }
 }
 
 } // GMO_Ad_Widget
