@@ -130,13 +130,20 @@ public function plugins_loaded()
     add_action('template_redirect', array($this, 'template_redirect'));
     add_action('init', array($this, 'init'));
     add_filter('query_vars', array($this, 'query_vars'));
+    add_filter('robots_txt', array($this, 'robots_txt'));
 
     add_filter('the_content', array($this, 'the_content'));
 }
 
+public function robots_txt($text)
+{
+    $text .= "Sitemap: ".home_url('sitemap/');
+    return $text;
+}
+
 public function init()
 {
-    add_rewrite_endpoint( GMOADSMASTER_SITEMAP_ENDPOINT, EP_ROOT );
+    add_rewrite_endpoint(GMOADSMASTER_SITEMAP_ENDPOINT, EP_ROOT);
 }
 
 public function template_redirect()
