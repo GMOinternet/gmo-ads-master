@@ -32,6 +32,30 @@
 
 define('GMOADSMASTER_URL',  plugins_url('', __FILE__));
 define('GMOADSMASTER_PATH', dirname(__FILE__));
+define('GMOADSMASTER_SITEMAP_ENDPOINT', 'sitemap');
+
+register_activation_hook( __FILE__ , 'gmoadsmaster_activation' );
+register_deactivation_hook( __FILE__ , 'gmoadsmaster_deactivation' );
+
+add_action( 'delete_option', 'gmoadsmaster_delete_option', 10, 1 );
+
+function gmoadsmaster_activation(){
+    update_option( 'gmoadsmaster_activation', true );
+    flush_rewrite_rules();
+}
+
+function gmoadsmaster_deactivation(){
+    delete_option( 'gmoadsmaster_activation' );
+    flush_rewrite_rules();
+}
+
+// delete_optionフックのコールバック関数
+function gmoadsmaster_delete_option($option){
+    if ( 'rewrite_rules' === $option && get_option('gmoadsmaster_activation') ) {
+        add_rewrite_endpoint( GMOADSMASTER_SITEMAP_ENDPOINT, EP_ROOT );
+    }
+}
+
 
 $gmoadsmaster = new GMO_Ads_Master();
 $gmoadsmaster->register();
@@ -103,8 +127,51 @@ public function plugins_loaded()
     add_action('wp_head', array($this, 'wp_head'));
     add_action('widgets_init', array($this, 'widgets_init'));
     add_action('wp_enqueue_scripts', array($this, 'wp_enqueue_scripts'));
+    add_action('template_redirect', array($this, 'template_redirect'));
+    add_action('init', array($this, 'init'));
+    add_filter('query_vars', array($this, 'query_vars'));
 
     add_filter('the_content', array($this, 'the_content'));
+}
+
+public function init()
+{
+    add_rewrite_endpoint( GMOADSMASTER_SITEMAP_ENDPOINT, EP_ROOT );
+}
+
+public function template_redirect()
+{
+    global $wp_query;
+    if (isset($wp_query->query[GMOADSMASTER_SITEMAP_ENDPOINT])) {
+        $posts = get_posts(array(
+            'post_type' => 'any',
+            'post_status' => 'publish',
+            'nopaging' => true,
+        ));
+
+        header('Content-Type: text/xml; charset=UTF-8');
+        echo '<?xml version="1.0" encoding="UTF-8" ?>'."\n";
+        echo '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'."\n";
+
+        global $post;
+        foreach ($posts as $post) {
+            setup_postdata($post);
+            echo '<url>';
+            echo '<loc>'.esc_url(get_permalink($post->ID)).'</loc>';
+            echo '<lastmod>'.esc_html(get_the_modified_date('Y-m-d H:i:s')).'</lastmod>';
+            echo '<priority>1.0</priority>';
+            echo '</url>'."\n";
+        }
+        wp_reset_postdata();
+        echo '</urlset>';
+        exit;
+    }
+}
+
+public function query_vars($vars)
+{
+    $vars[] = GMOADSMASTER_SITEMAP_ENDPOINT;
+    return $vars;
 }
 
 public function wp_enqueue_scripts()
