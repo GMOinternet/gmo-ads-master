@@ -272,6 +272,20 @@ public function options_page()
 <table class="form-table">
 <tbody>
     <tr>
+        <th><?php _e('Your sitemap URL.', 'gmoadsmaster'); ?></th>
+        <td>
+<?php
+    if ( get_option('permalink_structure') ) {
+        $sitemap = home_url('sitemap');
+    } else {
+        $sitemap = home_url('?sitemap=1');
+    }
+
+    printf('<a href="%1$s">%1$s</a>', $sitemap);
+?>
+        </td>
+    </tr>
+    <tr>
         <th><?php _e('Verification', 'gmoadsmaster'); ?></th>
         <td><input type="text" name="gmoadsmaster_verification" value="<?php echo esc_attr($this->get_option('gmoadsmaster_verification')); ?>" style="width:100%;"><br /><?php _e('Enter your meta key "content" value to verify your blog with <a href="https://www.google.com/webmasters/tools/home?hl=ja">Google Webmaster Tools</a>.', 'gmoadsmaster'); ?></td>
     </tr>
