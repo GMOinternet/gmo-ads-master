@@ -165,7 +165,7 @@ public function template_redirect()
             setup_postdata($post);
             echo '<url>';
             echo '<loc>'.esc_url(get_permalink($post->ID)).'</loc>';
-            echo '<lastmod>'.esc_html(get_the_modified_date('Y-m-d H:i:s')).'</lastmod>';
+            echo '<lastmod>'.esc_html(get_the_modified_date('Y-m-d\TH:i:s+00:00')).'</lastmod>';
             echo '<priority>1.0</priority>';
             echo '</url>'."\n";
         }
