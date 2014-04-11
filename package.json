@@ -1,12 +1,12 @@
 {
   "name": "gmo-ads-master",
   "title": "GMO Ads Master",
-  "description": "This is a awesome cool plugin.",
-  "version": "0.1.0",
-  "homepage": "https://digitalcube.jp/",
+  "description": "GMO Ads Master is the ad banner plugin which enables you to place ad contents to the desired locations such as inside article, sidebar and footer. In addition to that, using this plugin let you setup Google Analytics tracking code and sitemap tool settings, and sitemap can be easily generated without playing with PHP files.",
+  "version": "1.0",
+  "homepage": "https://github.com/GMOinternet/gmo-ads-master",
   "author": {
-    "name": "Digitalcube Co,.Ltd",
-    "url": "https://digitalcube.jp/"
+    "name": "WP Shop byGMO",
+    "url": "http://www.wpshop.com"
   },
   "devDependencies": {
     "grunt": "~0.4.1",

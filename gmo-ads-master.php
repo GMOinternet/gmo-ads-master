@@ -2,9 +2,8 @@
 /**
  * Plugin Name: GMO Ads Master
  * Plugin URI:  
- * Description: GMO Share Connection plugin is designed for easy social sharing by letting user choose place/pages to use icons.  
-9 social network services are supported in this plugin including Facebook and Twitter.
- * Version:     0.1.0
+ * Description: GMO Ads Master is the ad banner plugin which enables you to place ad contents to the desired locations such as inside article, sidebar and footer. In addition to that, using this plugin let you setup Google Analytics tracking code and sitemap tool settings, and sitemap can be easily generated without playing with PHP files.
+ * Version:     1.0
  * Author:      WP Shop byGMO
  * Author URI:  http://www.wpshop.com
  * License:     GPLv2
@@ -13,7 +12,7 @@
  */
 
 /**
- * Copyright (c) 2013 Digitalcube Co,.Ltd (https://digitalcube.jp/)
+ * Copyright (c) 2014 WP Shop byGMO (http://www.wpshop.com)
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License, version 2 or, at

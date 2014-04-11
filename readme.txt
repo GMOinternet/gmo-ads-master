@@ -1,18 +1,18 @@
 === GMO Ads Master ===
-Contributors:      megumithemes
-Donate link:       https://digitalcube.jp/
+Contributors:      takeaki-nagashima
+Donate link:       
 Tags:
 Requires at least: 3.8
 Tested up to:      3.8
-Stable tag:        0.1.0
+Stable tag:        1.0
 License:           GPLv2
 License URI:       http://www.gnu.org/licenses/gpl-2.0.html
 
-This is a awesome cool plugin.
+GMO Ads Master is the ad banner plugin which enables you to place ad contents to the desired locations such as inside article, sidebar and footer
 
 == Description ==
 
-
+GMO Ads Master is the ad banner plugin which enables you to place ad contents to the desired locations such as inside article, sidebar and footer. In addition to that, using this plugin let you setup Google Analytics tracking code and sitemap tool settings, and sitemap can be easily generated without playing with PHP files.
 
 == Installation ==
 
@@ -29,10 +29,10 @@ This is a awesome cool plugin.
 
 == Changelog ==
 
-= 0.1.0 =
+= 1.0 =
 * First release
 
 == Upgrade Notice ==
 
-= 0.1.0 =
+= 1.0 =
 First Release
